@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%inherit file="/base.html"/>
+<html>
+  <head>
+    <title>版本变化确认</title>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="${STATIC_URL}mystatic/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/pager/css/scro.page.bootstrap3.css" />
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/pager/css/scro.page.css" />
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/layout.css" />
+    <script type="text/javascript" src="${STATIC_URL}mystatic/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}mystatic/layer/layer.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}mystatic/pager/js/scro.page.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}mystatic/js/apply.version.manage.js"></script>
+  </head>
+  
+  <body>
+  	<div></div>
+  	<div class="manage-head">
+		<h6 class="padding-left manage-head-con text-sub">版本变化确认</h6>
+	</div>
+    <!-- HTML代码、服务端内容填充 -->
+	<div class="queryBox" style="margin: 10px 10px 10px 10px;">
+	<!-- 定义表格框架 -->
+		<table id="dataGridTableJson" class="table table-striped table-bordered table-hover table-condensed">
+			<thead>
+				<tr>
+					<!-- <th class="selectColumn"></th>  -->
+					<th>应用ID</th>
+					<th>应用名称</th>
+					<th>应用所属主机</th>
+					<th>变更文件</th>
+					<th>文件备份目录</th>
+					<th>备份结果</th>
+					<th>最近成功备份时间</th>
+					<th width="10%">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div id="page3"></div>
+  </body>
+</html>

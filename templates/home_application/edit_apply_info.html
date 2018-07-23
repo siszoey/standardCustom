@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%inherit file="/base.html"/>
+<html>
+  <head>
+    <title>添加应用配置信息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="${STATIC_URL}mystatic/bootstrap/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <script type="text/javascript" src="${STATIC_URL}mystatic/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}mystatic/js/apply.edit.info.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}mystatic/layer/layer.js"></script>
+    <script type="text/javascript">
+    	//alert(window.parent.select_busy);
+    </script>
+    <style type="text/css">
+    	.form-control{margin-top: 15px;margin-bottom: 3px;}
+    	.font_input{padding-top: 15px;}
+    	.pic_input{padding-left: 15px;cursor: pointer;}
+    	.input_tr{border-bottom: 1px solid #ccc;}
+    	.input_left{margin-left: 20px;}
+    	.td_right{padding-right: 20px;}
+    	.outer-container,.content {
+		    width: 100%; height: 180px;
+		}
+		.outer-container {
+		    position: relative;
+		    overflow: hidden;
+		}
+		.inner-container {
+			width: 100%;
+		    position: absolute; left: 0;
+		    overflow-x: hidden;
+		    overflow-y: scroll;
+		}
+		 
+		 /* for Chrome */
+		.inner-container::-webkit-scrollbar {
+		    display: none;
+		}
+    </style>
+  </head>
+  
+  <body>
+    <form class="form">
+      <div align="center" style="margin: 5px 10px 10px 10px;">
+		  <table width="100%" >
+		  	<tr class="input_tr">
+		  		<td width="20%"><label class="font_input input_left">应用名称</label></td>
+		  		<td class="td_right" colspan="3"><input type="text" class="form-control input_right" id="app_name" placeholder="为您的应用自定义一个名称"></select></td>
+		  	</tr>
+		  	<tr class="input_tr">
+		  		<td width="20%"><label class="font_input input_left">应用类型</label></td>
+		  		<td class="td_right" width="28%"><select id="selectApplyType" class="form-control input_right"></select></td>
+		  		<td width="20%" ><label class="font_input input_left">应用所属主机</label></td>
+		  		<td class="td_right" width="28%"><select id="selectHost" class="form-control input_right"></select></td>
+		  	</tr>
+		  	<tr class="input_tr">
+		  		<td width="20%"><label class="font_input input_left">应用文件</label></td>
+		  		<td class="td_right" colspan="3">
+					<table width="100%" class="input_right">
+						<tbody id="deployPath">
+							<tr>
+								<td><input type="text" id="topPathInput" class="form-control" placeholder="绝对路径+文件名"></td>
+								<td width="10%"><label class="font_input pic_input"><span class="glyphicon glyphicon-plus" aria-hidden="true" onclick="addDeployPath();"></span></label></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+		  	</tr>
+		  	<tr class="input_tr">
+		  		<td width="20%"><label class="font_input input_left">应用备份路径</label></td>
+		  		<td class="td_right" colspan="3"><input type="text" class="form-control input_right" id="appBakPath" placeholder="应用备份路径"></select></td>
+		  	</tr>
+		  	<tr class="input_tr">
+		  		<td width="20%"><label class="font_input input_left">检查周期</label></td>
+		  		<td><input type="text" class="form-control input_right" id="checkTime"></td>
+		  		<td width="20%"><label class="font_input" style="margin-left: 30px;">单位</label></td>
+		  		<td class="td_right">
+		  			<select class="form-control" name="timeType" id="timeType">
+						<option value="day">天</option>
+						<option value="hour">时</option>
+						<option value="minute">分</option>
+					</select>
+		  		</td>
+		  	</tr>
+		  </table>
+		  <div style="padding-top: 20px;padding-left: 30px;"><input type="button" class="btn btn-info" onclick="updateApplyInfo();" value="保存"/></div>
+	  </div>
+	</form>
+  </body>
+</html>

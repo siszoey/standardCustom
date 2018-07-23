@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%inherit file="/base.html"/>
+<html>
+  <head>
+    <title>备注</title>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="${STATIC_URL}mystatic/bootstrap/css/bootstrap.min.css" />
+	<script type="text/javascript" src="${STATIC_URL}mystatic/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}mystatic/layer/layer.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}mystatic/js/apply.vm.box.js"></script>
+  </head>
+  
+  <body>
+  	  <div class="container">
+  	  	  <form role="form" style="padding-top: 15px;">
+			  <div style="height: 30px;">
+			    <label style="font-size:12px;">(建议填写变更备注信息)</label>
+			  </div>
+			  <div class="form-group">
+			    <textarea rows="" cols="" class="form-control" style="resize:none" id="versionMark"></textarea>
+			  </div>
+			  <div align="right"><input type="button" onclick="saveVersion();" class="btn btn-info" value="保存"/></div>
+		  </form>
+  	  </div>
+  </body>
+</html>

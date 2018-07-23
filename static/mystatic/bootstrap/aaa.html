@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bootstrap 警告框（Alert）插件</title>
+		<meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.min.css">  	
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <style>
+        	body{
+        		font-size:24px;
+        		
+        	}
+        </style>
+	</head>
+	<body>
+	  <div class="container">
+		<h3>警告框（Alert）插件 alert() 方法</h3>
+		<div id="myAlert" class="alert alert-warning">
+			<a href="#" class="close" data-dismiss="alert">×</a>
+			<strong>警告！</strong>您的网络连接有问题。
+		</div>
+		<script type="text/javascript">
+			$(function() {
+			$("div#myAlert").bind('click',function () {
+                alert("警告消息框被关闭。");
+				});
+			});
+		</script>
+     </div>
+	
+	</body>
+</html>

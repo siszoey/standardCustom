@@ -1,0 +1,23 @@
+/*列框类型*/
+.indentify{padding-bottom: 20px;padding-top: 20px;}
+.class-attention{color:#0098ce;height:60px;line-height:60px;}
+.class-detail{ display: block; width:120px; height:140px; border:1px solid #eee; position: relative; -webkit-user-select: none;}
+.class-detail-top { padding: 32px 20px 0; height: 100px; }
+.class-detail-top .indentify-icon img{display:inline-block;width:40px;height:40px;}
+.class-detail-top .title {text-align:center;color:#161616;line-height:24px;margin-bottom:20px;}
+.class-detail-top .info { line-height: 20px; color: #797979; line-height: 20px; overflow: hidden;}
+.class-detail-top h6{height:40px;overflow:hidden;color:#797979;line-height:20px; word-spacing:10px;}
+.class-detail-has h6{height:25px;}
+.class-detail-has span{line-height:25px;}
+.class-detail .continue {width: 120px; line-height: 38px; text-align: center; color: #fff; border:1px solid #40B2DA;background: #40B2DA;position: absolute;bottom: -1px;left: -1px;}
+.class-detail .continue:hover{color:#fff;}
+.class-detail:hover{background:#F4F5F9;border-color:#40B2DA;}
+.class-detail:hover h3{color:#161616;}
+.class-detail.disabled .continue{ background-color: #eee;color:#525252;border-color: #eee;}
+.class-detail.disabled:hover .continue{border-color: #40B2DA;border-top-color: #eee;}
+.identify-detail{background:#f5f6fa;border:1px solid #c6c6c6;padding:30px;}
+/*body状态*/
+body{min-width: 750px;}
+/*饼状图*/
+
+.indentify-cake{width:90px;height:90px;}
