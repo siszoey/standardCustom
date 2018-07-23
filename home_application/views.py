@@ -26,7 +26,7 @@ from django.apps.registry import apps
 
 def index(request):
     """
-    首页
+             首页
     """
     return render_mako_context(request, '/home_application/index.html')
 
