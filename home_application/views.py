@@ -23,6 +23,7 @@ from common.log import logger
 from django.core.cache import cache, caches
 import time
 from django.apps.registry import apps
+from common_utils.model_to_dicts import objects_to_json
 
 def index(request):
     """
@@ -377,7 +378,7 @@ def doAddAPPConfig(request):
     ret_code = True
     try:
         APPConfig.objects.create(app_name=app_name,app_host_ip=app_host_ip
-                             ,app_type=app_type,app_biz_id=app_biz_id
+                             ,app_type_id=app_type,app_biz_id=app_biz_id
                              ,host_os_type=host_os_type,host_source=host_source
                              ,app_biz_name=app_biz_name
                              ,app_config_file_path=app_config_file_path
@@ -510,21 +511,22 @@ def getPagingAPPConfigList(rq):
                         ,'pageSize':page_size,'pageNumber':page_number
                         ,'list':  convert_objs_to_dicts(dicts)
                         ,"firstPage":firstPage,"lastPage":lastPage})
-    
+def getDataDemo():
+     dicts = APPConfig.objects.all()
+     return convert_objs_to_dicts(dicts)   
     
 #对象列表转换成字典
 def convert_objs_to_dicts(model_obj):
     import inspect, types
     
     object_array = []
-     
+    list_data = [] 
     for obj in model_obj:
-#         obj.last_update_time = obj.last_update_time.isoformat()
-#         obj.create_time = obj.create_time.isoformat()
         # 获取到所有属性
         field_names_list = obj._meta.get_all_field_names()
-        print field_names_list
+        #print field_names_list
         for fieldName in field_names_list:
+            dict_data = {}
             try:
                 fieldValue = getattr(obj, fieldName)  # 获取属性值
                 print fieldName, "--", type(fieldValue), "--", hasattr(fieldValue, "__dict__")
@@ -535,19 +537,21 @@ def convert_objs_to_dicts(model_obj):
                 #if hasattr(fieldValue, "__dict__"):
                 #     fieldValue = convert_obj_to_dicts(fieldValue)
             
-                setattr(obj, fieldName, fieldValue)
+                dict_data[fieldName]=fieldValue
+                #setattr(obj, fieldName, fieldValue)
                 #print fieldName, "\t", fieldValue
             except Exception, ex:
                 print ex
                 pass
+        list_data.append(dict_data)
         # 先把Object对象转换成Dict
         dict = {}
         dict.update(obj.__dict__)
         dict.pop("_state", None)  # 此处删除了model对象多余的字段
         object_array.append(dict)
-    print object_array
+    print list_data
     
-    return object_array
+    return list_data
 
 #对象转换成字典
 def convert_obj_to_dicts(obj):

@@ -30,8 +30,8 @@ from django.conf.global_settings import *  # noqa
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'confcheck'
-APP_TOKEN = '57385e35-14b2-4f5d-bd8c-ba6d6519a7a5'
+APP_ID = 'bkingdemo'
+APP_TOKEN = '725aa07f-eb10-4bfe-a92b-8c4e3acee2ca'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com
 BK_PAAS_HOST = 'http://paas.blueking.com/'
 
@@ -115,6 +115,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'dajaxice',
+    'dajax',
     # OTHER 3rd Party App
     'app_control',
     'account',

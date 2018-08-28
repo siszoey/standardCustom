@@ -57,4 +57,6 @@ CACHES = {
    'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
   }  
  }
+ 
+ 
 }

@@ -26,7 +26,8 @@ class Dicts (models.Model):
 class APPConfig (models.Model):
     app_name=models.CharField(u"应用名称",max_length=255)
     app_host_ip=models.CharField(u"应用所属主机",max_length=255)
-    app_type=models.IntegerField(u"业务类型")
+    #app_type=models.IntegerField(u"业务类型")
+    app_type=models.ForeignKey(Dicts)
     app_biz_id=models.IntegerField(u"主机业务ID")
     host_os_type=models.CharField(u"主机操作系统类别",max_length=255)
     host_source=models.CharField(u"主机源",max_length=255,null=True,blank=True)
