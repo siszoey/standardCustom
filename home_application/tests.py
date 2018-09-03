@@ -24,7 +24,7 @@ from .models import *
 # import from lib
 from django.test import TestCase
 import unittest
-from models import APPConfig,Dicts
+from models import Dicts
 
 class SimpleTest(unittest.TestCase):
     def setUp(self):
@@ -51,8 +51,8 @@ class SimpleTest(unittest.TestCase):
 #         self.assertFalse('Foo'.isupper())
 
     def test_split(self):
-        dicts = APPConfig.objects.all()
-        print convert_objs_to_dicts(dicts)
+        #dicts = APPConfig.objects.all()
+        print ""
             
     #对象列表转换成字典
 def convert_objs_to_dicts(model_obj):

@@ -30,13 +30,13 @@ from django.conf.global_settings import *  # noqa
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'bkingdemo'
-APP_TOKEN = '725aa07f-eb10-4bfe-a92b-8c4e3acee2ca'
+APP_ID = 'customatoms'
+APP_TOKEN = '386892eb-954f-4838-83ef-b9fbcd0672ce'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com
-BK_PAAS_HOST = 'http://paas.blueking.com/'
+BK_PAAS_HOST = 'http://paas.nianhuatech2.com:7001'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
-DEFAULT_BK_API_VER = ''
+DEFAULT_BK_API_VER = 'v2'
 
 # 是否启用celery任务
 IS_USE_CELERY = True
@@ -121,6 +121,8 @@ INSTALLED_APPS = (
     'app_control',
     'account',
     'home_application',
+    'login',
+    'captcha',
 )
 
 # ==============================================================================
