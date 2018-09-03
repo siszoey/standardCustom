@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8"/>
+<title>标准运维服务系統</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+<meta name="MobileOptimized" content="320">
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="/static/mystatic/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="/static/mystatic/assets/plugins/select2/select2_metro.css"/>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME STYLES -->
+<link href="/static/mystatic/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/css/stylen.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="/static/mystatic/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+<link href="/static/mystatic/assets/plugins/toastr/toastr.min.css" rel="stylesheet">
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="login">
+<!-- BEGIN LOGO -->
+<!-- <div class="logo">
+	<img src="static/mystatic/assets/img/logo-big.png" alt=""/>
+</div> -->
+<!-- END LOGO -->
+<!-- BEGIN LOGIN -->
+<div class="content" style="margin-top: 200px;">
+	<!-- BEGIN LOGIN FORM -->
+	<form class="login-form" action="/do_login/" method="post" onsubmit="return toVaild()">
+		<h3 class="form-title" align="center">用户登录</h3>
+		<div class="alert alert-danger display-hide">
+			<button class="close" data-close="alert"></button>
+			<span>
+				 请输入您的用户名、密码及验证码
+			</span>
+		</div>
+		{% csrf_token %}
+		<div class="form-group">
+			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+			<label class="control-label visible-ie8 visible-ie9">用户名</label>
+			<div class="input-icon">
+				<i class="fa fa-user"></i>
+				<input name="username" id="userName" size="25" value="" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="用户名"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label visible-ie8 visible-ie9">密码</label>
+			<div class="input-icon">
+				<i class="fa fa-lock"></i>
+				<input name="password" id="password" size="25" value="" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="密码"/>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="control-label visible-ie8 visible-ie9">验证码</label>
+            <div class="input-icon">
+            	  <i class="fa fa-check"></i>         	  
+                  <input name="jcaptchaCode" id="jcaptchaCode"  value="" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码"  style="width:50%;display:inline-block;" maxlength="5">
+                  <input name="captchaCode_0" id="jcaptchaCode_0"  value="{{ hashkey }}" hidden="hidden">
+                  <img class="jcaptcha-btn jcaptcha-img" style="vertical-align:top" src="{{ imgage_url }}" title="点击更换验证码">
+                  <a class="jcaptcha-btn" href="javascript:void(0);" onclick="capt_click()">换一张</a>
+            </div>	
+			<script src="/static/mystatic/assets/plugins/jquery/jquery-3.2.1.min.js"></script>                  
+        </div>	
+			   		 
+		<div class="form-group">
+			<label for="password">
+			<input type="checkbox" name="remember" value="1"/> 记住我 </label>
+			<button id="loginBut" type="submit"  class="btn blue pull-right">
+			登录 <i class="m-icon-swapright m-icon-white"></i>
+			</button>
+		</div>
+	</form>
+	<!-- END LOGIN FORM -->
+</div>
+<!-- END LOGIN -->
+<!-- BEGIN COPYRIGHT -->
+<div class="copyright">
+	 2018 &copy; bking - permission
+</div>
+<!-- END COPYRIGHT -->
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+	<script src="assets/plugins/respond.min.js"></script>
+	<script src="assets/plugins/excanvas.min.js"></script> 
+	<![endif]-->
+<script src="/static/mystatic/assets/plugins/jquery/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/jquery/jquery-migrate-1.4.1.min.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/jquery/jquery.cookie.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/static/mystatic/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/jquery/jquery.backstretch.min.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/select2/select2.min.js" type="text/javascript" ></script>
+<script src="/static/mystatic/assets/plugins/canvas-nest/canvas-nest.min.js" color="0,0,255" opacity='0.7' zIndex="-2" count="300" type="text/javascript" ></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/static/mystatic/assets/js/app.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/js/login.js" type="text/javascript"></script>
+<script src="/static/mystatic/assets/plugins/toastr/toastr.min.js" type="text/javascript"></script>
+<script src="/static/js/csrftoken.js"></script>
+<!-- <script src="app/lib/security/sha256.js" type="text/javascript"></script> -->
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<script type="text/javascript">
+	toastr.options.positionClass = 'toast-top-center';	
+	jQuery(document).ready(function() {
+		App.init();
+		Login.init();
+	});
+	function capt_click() {
+		$.getJSON("/captcha/refresh/", function(result) {
+			$('.jcaptcha-img').attr('src', result['image_url']);
+			$('#jcaptchaCode_0').val(result['key'])
+		});
+	}
+	
+	$('#jcaptchaCode').blur(function(){
+		// #id_captcha_1为输入框的id，当该输入框失去焦点是触发函数
+		json_data={
+				'response':$('#jcaptchaCode').val(),  // 获取输入框和隐藏字段id_captcha_0的数值
+		        'hashkey':$('#jcaptchaCode_0').val()
+		   }
+		   $.getJSON('/do_captcha_refresh/', json_data, function(data){ //ajax发送            $('#captcha_status').remove()
+		        if(data['status']){ //status返回1为验证码正确， status返回0为验证码错误， 在输入框的后面写入提示信息
+		        	//$('#jcaptchaCode').after('<span id="captcha_status" >*验证码正确</span>')
+		        }else{
+		            /* $('#jcaptchaCode').after('<span id="captcha_status" >*验证码错误</span>') */
+		            toastr.warning('验证码错误');
+		            capt_click();
+		        }
+		   });
+	});
+	
+</script>
+<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

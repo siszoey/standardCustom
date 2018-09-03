@@ -1,0 +1,77 @@
+<%inherit file="/base.html"/>
+<div style="background-color: white;" id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="panel-body" style="margin-top: 0px;">
+          <form class="form-inline">
+            <div class="form-group">
+             	<input type="text" class="form-control" v-model="q.build_name" @keyup.enter="query" placeholder="楼宇名称">
+            </div>
+            <!-- <div class="form-group">
+              	<input type="text" class="form-control" v-model="q.op_name" @keyup.enter="query" placeholder="用户名">
+            </div>
+            <div class="form-group">
+              	<input type="text" class="form-control" v-model="q.phone_id" @keyup.enter="query" placeholder="手机号">
+            </div> -->
+            <a class="btn btn-default fi-magnifying-glass icon-green" @click="query">查询</a>
+          </form>
+        </div>
+        
+		<div class="grid-btn" style="border:1px solid #F5F5F5">
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<!-- <a class="btn btn-primary" @click="asyncUser"><i class="fa fa-plus"></i>&nbsp;同步蓝鲸平台账号</a> -->
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<!-- <a class="btn btn-primary" @click="toLocked"><i class="fi-lock on"></i>&nbsp;锁定</a>
+			<a class="btn btn-primary" @click="toUnLocked"><i class="fi-unlock"></i>&nbsp;解锁</a>
+			<a class="btn btn-primary" @click="updatePassword"><i class="fa fa-pencil-square-o"></i>&nbsp;密码修改</a> -->
+			<!-- <a class="btn btn-primary" @click="setRoles"><i class="fi-widget"></i>&nbsp;角色分配</a> -->
+			<!-- <a class="btn btn-primary" @click="setMenus"><i class="fi-widget"></i>&nbsp;查看权限</a> -->
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			
+			<!-- <div class="btn-group mr5" >
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                  		数据导出 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a @click="exportGrid('EXCEL')">导出excel</a></li>
+                  <li class="divider"></li>
+                  <li><a @click="exportGrid('PDF')">导出PDF</a></li>
+                </ul>
+            </div> -->
+            <table id="jqGrid"></table>
+	    	<div id="jqGridPager"></div>
+		</div>
+		
+	    
+    </div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">楼宇名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="user.buid_name"  placeholder="楼宇名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">服务地址</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="user.service_addr" placeholder="服务地址"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	
+</div>
+
+<script src="${STATIC_URL}mystatic/myjs/sysbuild.js"></script>
+<script src="${STATIC_URL}js/csrftoken.js"></script>
+<script type="text/javascript">
+
+
+</script>

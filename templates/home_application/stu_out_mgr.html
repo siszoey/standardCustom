@@ -1,0 +1,75 @@
+<%inherit file="/base.html"/>
+	<link type="text/css" href="${STATIC_URL}mystatic/date/css/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <link type="text/css" href="${STATIC_URL}mystatic/date/css/jquery-ui-timepicker-addon.css" rel="stylesheet" />
+    
+<div style="background-color: white;" id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="panel-body" style="margin-top: 0px;">
+          <form class="form-inline">
+            <!--date 日期类型-->
+		   <div class="form-group">时间:   
+	            <!--指定 date标记-->  
+	            <input type="text"  class="form-control ui_timepicker" id="createdTime_start" readonly="readonly" name="datetime"  value="">
+	                <!-- <input type='text' class="form-control" id="createdTime_start" readonly="readonly"/>  
+	                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+					<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>  -->
+	            <!-- </div> -->
+	            	至  
+	            <!-- <div class='input-group date datetimepicker' id='datetimepicker2'>   -->
+	            <input type="text"  class="form-control ui_timepicker" id="createdTime_end" readonly="readonly" name="datetime"  value="">
+	                <!-- <input type='text' class="form-control" id="createdTime_end" readonly="readonly"/>  
+	                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
+					<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> -->
+	            <!-- </div> -->
+        	</div>
+        	
+            <a class="btn btn-default fi-magnifying-glass icon-green" @click="query">查询</a>
+            </div>
+          </form>
+        </div>
+        <div class="grid-btn" style="border:1px solid #F5F5F5">
+			<a class="btn btn-primary" @click="setRoles"><i class="fi-widget"></i>&nbsp;到访列表</a>
+			<a class="btn btn-primary" @click="setMenus"><i class="fi-widget"></i>&nbsp;到访离开列表</a>
+		</div>
+		<div style="border:1px solid #F5F5F5" id="daofanglist">
+			<div class="grid-btn" style="border:0px solid #F5F5F5;">
+				<a class="btn btn-primary" style="float: right; height: 30px;padding-left: 5px;" @click="exportGrid1('EXCEL')"><i class="fa fa-plus"></i>&nbsp;导出excel</a>
+				<a class="btn btn-primary" style="float: right; height: 30px;" @click="add"><i class="fa fa-plus"></i>&nbsp;离开确认</a>
+				<b id="daofang">到访人数：0</b> 
+			</div>
+            <table id="jqGrid"></table>
+	    	<div id="jqGridPager"></div>
+	    </div>
+	    <div style="border:1px solid #F5F5F5;display: none;" id="daofanglikailist">
+	    	<div class="grid-btn" style="border:0px solid #F5F5F5;">
+				<a class="btn btn-primary" style="float: right; height: 30px;" @click="exportGrid2('EXCEL')"><i class="fa fa-plus"></i>&nbsp;导出excel</a>
+	    		<b id="daofanglikai">到访离开人数：0</b>
+			</div>
+            <table id="jqGrid2"></table>
+	    	<div id="jqGridPager2"></div>
+		</div>
+		
+	    
+    </div>
+
+
+<script src="${STATIC_URL}mystatic/myjs/stu_out_mgr.js"></script>
+<script src="${STATIC_URL}js/csrftoken.js"></script>
+<script type="text/javascript" src="${STATIC_URL}mystatic/date/js/jquery-ui-1.8.17.custom.min.js"></script>
+<script type="text/javascript" src="${STATIC_URL}mystatic/date/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="${STATIC_URL}mystatic/date/js/jquery-ui-timepicker-zh-CN.js"></script>
+<script type="text/javascript">
+
+$(function () {
+    $(".ui_timepicker").datetimepicker({
+        //showOn: "button",
+        //buttonImage: "./css/images/icon_calendar.gif",
+        //buttonImageOnly: true,
+        showSecond: true,
+        timeFormat: 'hh:mm:ss',
+        stepHour: 1,
+        stepMinute: 1,
+        stepSecond: 1
+    })
+})
+</script>
