@@ -1,9 +1,8 @@
 var grid = $("#jqGrid");
 var grid2 = $("#jqGrid2");
 $(function () {
-	$(".ui_timepicker").datepicker('setDate',currentDate());
     $("#jqGrid").jqGrid({
-        url: site_url+'get_stu_in_paging/',
+        url: site_url+'get_stu_flow_in_paging/',
         mtype: 'POST',
         datatype: "json",
         colModel: [			
@@ -14,9 +13,9 @@ $(function () {
 			{ label: '寝室', name: 'stu_room', index: 'stu_room', width: 80 }, 
 			{ label: '进出类型', name: 'in_or_out', index: 'in_or_out', width: 80}, 
 			{ label: '归寝时间', name: 'stu_flow_date', index: 'stu_flow_date', width: 80},
-			/*{ label: '照片', name: 'stu_img', index: 'stu_img',width: 60, formatter: function(value, options, row){
+			{ label: '照片', name: 'stu_img', index: 'stu_img',width: 60, formatter: function(value, options, row){
 				return '<a> <img class="jqgrid_img" onclick="javascript:window.open(this.src)" src="http://192.168.1.50'+value+'"></img> </a>';
-			}}*/
+			}}
         ],
 		viewrecords: true,
         height: $(window).height()-100,
@@ -83,7 +82,7 @@ $(function () {
 
 function loadOut () {
     $("#jqGrid2").jqGrid({
-        url: site_url+'get_stu_out_paging/',
+        url: site_url+'get_stu_flow_out_paging/',
         mtype: 'POST',
         datatype: "json",
         colModel: [			
@@ -94,9 +93,9 @@ function loadOut () {
 			{ label: '寝室', name: 'stu_room', index: 'stu_room', width: 80 }, 
 			{ label: '进出类型', name: 'in_or_out', index: 'in_or_out', width: 80}, 
 			{ label: '离寝时间', name: 'stu_flow_date', index: 'stu_flow_date', width: 80}, 
-			/*{ label: '照片', name: 'stu_img', index: 'stu_img',width: 60, formatter: function(value, options, row){
+			{ label: '照片', name: 'stu_img', index: 'stu_img',width: 60, formatter: function(value, options, row){
 				return '<a> <img class="jqgrid_img" onclick="javascript:window.open(this.src)" src="http://192.168.1.50'+value+'"></img> </a>';
-			}}*/
+			}}
         ],
 		viewrecords: true,
         height: $(window).height()-100,
@@ -256,16 +255,16 @@ var vm = new Vue({
         query: function () {
         	$("#jqGrid").jqGrid('setGridParam',{ 
                 postData:{
-                	'build_name': vm.q.stu_class,
-                	'stu_class': vm.q.stu_class,
+                	'stu_code': vm.q.stu_code,
+                	'stu_name': vm.q.stu_name,
                 	'q_date_start': $("#q_date_start").val()
                 },
                 page:1 
             }).trigger("reloadGrid");
         	$("#jqGrid2").jqGrid('setGridParam',{ 
                 postData:{
-                	'build_name': vm.q.stu_class,
-                	'stu_class': vm.q.stu_class,
+                	'stu_code': vm.q.stu_code,
+                	'stu_name': vm.q.stu_name,
                 	'q_date_start': $("#q_date_start").val()
                 },
                 page:1 
@@ -281,7 +280,7 @@ var vm = new Vue({
             });*/
         	 try{ 
                  var elemIF = document.createElement("iframe");   
-                 elemIF.src = site_url+'exp_stu_in/?jgCols='+names+'&showNames='+showNames+'&para='+para;
+                 elemIF.src = site_url+'exp_stu_flow_in/?jgCols='+names+'&showNames='+showNames+'&para='+para;
                  elemIF.style.display = "none";   
                  document.body.appendChild(elemIF);   
              }catch(e){ 
@@ -298,7 +297,7 @@ var vm = new Vue({
         	var para = getQueryPara();
         	try{ 
                 var elemIF = document.createElement("iframe");   
-                elemIF.src = site_url+'exp_stu_out/?jgCols='+names+'&showNames='+showNames+'&para='+para;  
+                elemIF.src = site_url+'exp_stu_flow_out/?jgCols='+names+'&showNames='+showNames+'&para='+para;  
                 elemIF.style.display = "none";   
                 document.body.appendChild(elemIF);   
             }catch(e){ 

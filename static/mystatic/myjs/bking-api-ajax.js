@@ -7,6 +7,7 @@ $(function(){
 	//get_template_info();
 	//addstu2();
 	asyncKoalaData();
+	get_koala_user();
 });
 
 function asyncKoalaData(){
@@ -24,9 +25,13 @@ function asyncKoalaData(){
 
 function syncDataByEvents(){
 	$.post(site_url+'get_events/',{'curr_time':currentDate()},function(r){
-		/*if(r.code){
-			//$("#biz_count").html(r.count);
-		}*/
+		
+    });
+}
+
+function get_koala_user(){
+	$.post(site_url+'get_koala_user/',{'curr_time':currentDate()},function(r){
+		
     });
 }
 

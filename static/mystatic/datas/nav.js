@@ -5,6 +5,10 @@ var navs = [{
 	"children": [{
 		"title": "归寝情况查询",
 		"icon": "&#xe70d;",
+		"href": "stus_view"
+	},{
+		"title": "个人归寝查询",
+		"icon": "&#xe70d;",
 		"href": "stu_view"
 	}, {
 		"title": "陌生来访",

@@ -6,10 +6,10 @@
 		<div class="panel-body" style="margin-top: 0px;">
           <form class="form-inline">
             <div class="form-group">
-             	<input type="text" class="form-control" v-model="q.build_name" id="build_name" @keyup.enter="query" placeholder="楼宇名称">
+             	<input type="text" class="form-control" v-model="q.stu_code" id="build_name" @keyup.enter="query" placeholder="学号">
             </div>
             <div class="form-group">
-              	<input type="text" class="form-control" v-model="q.stu_class" id = "stu_class" @keyup.enter="query" placeholder="班级">
+              	<input type="text" class="form-control" v-model="q.stu_name" id = "stu_class" @keyup.enter="query" placeholder="姓名">
             </div>
             <div class="form-group">时间: 
               	<input type="text"  class="form-control ui_timepicker" id="q_date_start" readonly="readonly" name="datetime"  value="">
@@ -42,7 +42,7 @@
         </div>
     </div>
 </div>
-<script src="${STATIC_URL}mystatic/myjs/stumgr.js"></script>
+<script src="${STATIC_URL}mystatic/myjs/stu_flow_mgr.js"></script>
 <script src="${STATIC_URL}js/csrftoken.js"></script>
 <script type="text/javascript" src="${STATIC_URL}mystatic/date/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript" src="${STATIC_URL}mystatic/date/js/jquery-ui-timepicker-addon.js"></script>
@@ -60,99 +60,4 @@ $(".ui_timepicker").datetimepicker({
     stepMinute: 1,
     stepSecond: 1
 });
-
-$(".ui_timepicker").datepicker('setDate',currentDate());
-//主机地址
-var wsUrl = "ws://192.168.1.50:9000/video";
-//视频流地址
-var rtspUrl = "rtsp://192.168.1.10/user=admin&password=&channel=1&stream=0.sdp?";
-
-//websocket连接
-var ws = wsUrl + "?url=" + encodeURIComponent(rtspUrl);
-
-console.info(ws);
-
-var output;
-
-//初始化操作
-function init() {
-	output = document.getElementById("output");
-	testWebSocket();
-}
-
-function testWebSocket() {
-	websocket = new WebSocket(ws);
-	debugger
-	websocket.onopen = function(evt) {
-		onOpen(evt)
-	};
-	websocket.onclose = function(evt) {
-		onClose(evt)
-	};
-	websocket.onmessage = function(evt) {
-		onMessage(evt)
-	};
-	websocket.onerror = function(evt) {
-		onError(evt)
-	};
-}
-
-function onOpen(evt) {
-	//writeToScreen("CONNECTED");
-	doSend("WebSocket rocks");
-}
-
-function onClose(evt) {
-	//writeToScreen("DISCONNECTED");
-}
-
-//收到消息
-function onMessage(evt) {
-	var obj = eval('(' + evt.data + ')');
-	var image = obj['data']['face']['image'];
-	debugger
-	writeToScreen('<img height="100" width="100" src="data:image/png;base64,' + image + '"/>');
-	///alert("陌生人到访");
-	var person_id = obj['data']['person']['id'];
-	if (person_id == undefined || person_id == null || person_id == ""){
-		$.messager.lays(145, 145);
-		$.messager.show('<font color=red>有人到访</font>', '<img height="100%" width="100%" src="data:image/png;base64,' + image + '"/>', 1000*10);
-	} 
-	
-	//关闭连接
-	//websocket.close();
-}
-
-function onError(evt) {
-	//writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-}
-
-function doSend(message) {
-	//writeToScreen("SENT: " + message);
-	websocket.send(message);
-}
-
-//输出识别结果到屏幕
-function writeToScreen(message) {
-	//var result = document.getElementById("test");
-	//var pre = document.createElement("p");
-	//pre.style.wordWrap = "break-word";
-	//pre.innerHTML = message;
-	//output.appendChild(pre);
-	/* layer.open({
-		type: 1,
-		skin: 'layui-layer-molv',
-		title: "陌生人到访",
-		area: ['550px', '270px'],
-		shadeClose: false,
-		content: jQuery("#output"),
-		btn: ['修改','取消'],
-		btn1: function (index) {
-			layer.close(index);
-        }
-	}); */
-}
-
-window.addEventListener("load", init, false);
-
 </script>

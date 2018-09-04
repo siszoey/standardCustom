@@ -23,6 +23,7 @@ encoding//login/urls.py=utf-8
 encoding//login/views.py=utf-8
 encoding//templates/home_application/build_view.html=UTF-8
 encoding//templates/home_application/dictmgr.html=UTF-8
+encoding//templates/home_application/stu_flow_mgr.html=UTF-8
 encoding//templates/home_application/stu_out_mgr.html=UTF-8
 encoding//templates/home_application/stumgr.html=UTF-8
 encoding//templates/login/confirm.html=UTF-8

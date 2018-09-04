@@ -45,8 +45,11 @@ def index(request):
         pass
     return render_mako_context(request, '/home_application/index.html')
 
-def stu_view(request):
+def stus_view(request):
     return render_mako_context(request, '/home_application/stumgr.html')
+
+def stu_view(request):
+    return render_mako_context(request, '/home_application/stu_flow_mgr.html')
 
 def stu_out_view(request):
     return render_mako_context(request, '/home_application/stu_out_mgr.html')
@@ -444,6 +447,100 @@ def get_stu_out_paging(req):
                         ,'pageSize':page_size,'pageNumber':page_number
                         ,'list':  objs2
                         ,"firstPage":firstPage,"lastPage":lastPage})
+        
+def get_stu_flow_out_paging(req):
+    from django.db import connection
+    cursor=connection.cursor()
+    sql = u"SELECT DISTINCT t1.id,t1.stu_code,t1.stu_name,t1.stu_build,t1.stu_class,t1.stu_room,t2.in_or_out,date_format(t2.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,t2.stu_img\
+            FROM home_application_students t1,home_application_stuflows t2\
+            WHERE t1.stu_code=t2.stu_code and t2.in_or_out='离寝'"
+    sqlcount =u"SELECT  t1.id \
+                FROM home_application_students t1,home_application_stuflows t2 \
+                WHERE t1.stu_code=t2.stu_code and t2.in_or_out='离寝' "
+    try:
+        stu_code = req.POST.get("stu_code")
+        stu_name = req.POST.get("stu_name")
+        q_date_start = req.POST.get("q_date_start")
+        if q_date_start != None and q_date_start != "":
+            q_date_start=q_date_start.replace(u'&nbsp;', u' ')
+        #if q_date_start == None or q_date_start == "":
+        #    q_date_start = str(datetime.datetime.now())
+        page_size = int(req.POST.get("limit"))
+        page_number = int(req.POST.get("page"))
+    except ValueError:
+        page_size=10
+        page_number=1
+    if page_number > 0:
+        startPos = (page_number-1) * page_size
+        endPos = startPos + page_size
+    if stu_code !=None and stu_code != "" :
+        sql += u" and t1.stu_code = '"+stu_code+u"'"
+        sqlcount += u" and t1.stu_code = '"+stu_code+u"'"
+    if stu_name !=None and stu_name != "" :
+        sql += u" and t1.stu_name = '"+stu_name+u"'"
+        sqlcount += u" and t1.stu_name = '"+stu_name+u"'"
+    if q_date_start != None and q_date_start != "":
+        sqldate = u"select * from (\
+            select * from (\
+                select t.id,t.stu_code,t.in_or_out,date_format(t.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,\
+                    ABS(str_to_date('"+q_date_start+u"','%Y-%m-%d %H:%i:%s')-t.stu_flow_date)  AS diffTime\
+                FROM home_application_stuflows t,home_application_students s\
+                WHERE t.stu_code=s.stu_code\
+                order by stu_code,in_or_out,diffTime asc) a\
+            group by a.stu_code asc,in_or_out asc,diffTime asc\
+            ORDER BY a.stu_code asc,diffTime asc\
+            )b\
+            group by b.stu_code"
+            
+        sql += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+        sqlcount += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+        sql += u" limit "+str(startPos)+u","+str(endPos)+u" "
+        #onestus = Students.objects.raw(sql)
+        #objs2 = convert_objs_to_dicts(onestus)
+        cursor.execute(sql)
+        objs2 =dictfetchall(cursor)
+        cursor.execute(sqlcount)
+        objs3 =dictfetchall(cursor)
+        total = len(list(objs3))
+        pageCount = (total  +  page_size  - 1) / page_size
+        if pageCount <=0:
+            pageCount = 1
+        lastPage = True
+        firstPage = True
+        if(page_number != 1):
+            firstPage = False
+        if(lastPage != pageCount):
+            lastPage=False
+        return render_json({'code':True,'msg':"查询列表成功."
+                    ,'totalRow':total,'totalPage':pageCount
+                    ,'pageSize':page_size,'pageNumber':page_number
+                    ,'list':  objs2
+                    ,"firstPage":firstPage,"lastPage":lastPage})   
+        
+    else:
+        sql += u" limit "+str(startPos)+u","+str(endPos)+u" "
+        #dicts = Students.objects.raw(sql)
+        #total = len(list(Students.objects.raw(sqlcount)))
+        cursor.execute(sql)
+        objs2 =dictfetchall(cursor)
+        cursor.execute(sqlcount)
+        objs3 =dictfetchall(cursor)
+        total = len(list(objs3))
+        pageCount = (total  +  page_size  - 1) / page_size
+        if pageCount <=0:
+            pageCount = 1
+        lastPage = True
+        firstPage = True
+        if(page_number != 1):
+            firstPage = False
+        if(lastPage != pageCount):
+            lastPage=False
+        return render_json({'code':True,'msg':"查询列表成功."
+                        ,'totalRow':total,'totalPage':pageCount
+                        ,'pageSize':page_size,'pageNumber':page_number
+                        ,'list':  objs2
+                        ,"firstPage":firstPage,"lastPage":lastPage})
+
 
 def get_stu_in_paging(req):
     from django.db import connection
@@ -477,6 +574,101 @@ def get_stu_in_paging(req):
     if stu_class !=None and stu_class != "" :
         sql += u" and t1.stu_class like '%%"+stu_class+u"%%'"
         sqlcount += u" and t1.stu_class like '%%"+stu_class+u"%%'"
+    if q_date_start != None and q_date_start != "":
+        sqldate = u"select * from (\
+            select * from (\
+                select t.id,t.stu_code,t.in_or_out,date_format(t.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,\
+                    ABS(str_to_date('"+q_date_start+u"','%Y-%m-%d %H:%i:%s')-t.stu_flow_date)  AS diffTime\
+                FROM home_application_stuflows t,home_application_students s\
+                WHERE t.stu_code=s.stu_code\
+                order by stu_code,in_or_out,diffTime asc) a\
+            group by a.stu_code asc,in_or_out asc,diffTime asc\
+            ORDER BY a.stu_code asc,diffTime asc\
+            )b\
+            group by b.stu_code"
+        sql += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+        sqlcount += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+        sql += u" limit "+str(startPos)+u","+str(endPos)+u" "
+        #onestus = Students.objects.raw(sql)
+        #objs2 = convert_objs_to_dicts(onestus)
+        #total = len(list(Students.objects.raw(sqlcount)))
+        cursor.execute(sql)
+        objs2 =dictfetchall(cursor)
+        cursor.execute(sqlcount)
+        objs3 =dictfetchall(cursor)
+        total = len(list(objs3))
+        pageCount = (total  +  page_size  - 1) / page_size
+        if pageCount <=0:
+            pageCount = 1
+        lastPage = True
+        firstPage = True
+        if(page_number != 1):
+            firstPage = False
+        if(lastPage != pageCount):
+            lastPage=False
+        return render_json({'code':True,'msg':"查询列表成功."
+                    ,'totalRow':total,'totalPage':pageCount
+                    ,'pageSize':page_size,'pageNumber':page_number
+                    ,'list':  objs2
+                    ,"firstPage":firstPage,"lastPage":lastPage})   
+        
+    else:
+        sql += u" limit "+str(startPos)+u","+str(endPos)+u" "
+        #dicts = Students.objects.raw(sql)
+        #total = len(list(Students.objects.raw(sqlcount)))
+        cursor.execute(sql)
+        objs2 =dictfetchall(cursor)
+        cursor.execute(sqlcount)
+        objs3 =dictfetchall(cursor)
+        total = len(list(objs3))
+        pageCount = (total  +  page_size  - 1) / page_size
+        if pageCount <=0:
+            pageCount = 1
+        lastPage = True
+        firstPage = True
+        if(page_number != 1):
+            firstPage = False
+        if(lastPage != pageCount):
+            lastPage=False
+        return render_json({'code':True,'msg':"查询列表成功."
+                        ,'totalRow':total,'totalPage':pageCount
+                        ,'pageSize':page_size,'pageNumber':page_number
+                        ,'list': objs2
+                        ,"firstPage":firstPage,"lastPage":lastPage})
+
+
+def get_stu_flow_in_paging(req):
+    from django.db import connection
+    cursor=connection.cursor()
+    sql = u"SELECT DISTINCT t1.id,t1.stu_code,t1.stu_name,t1.stu_build,t1.stu_class,t1.stu_room,t2.in_or_out,date_format(t2.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,t2.stu_img\
+            FROM home_application_students t1,home_application_stuflows t2\
+            WHERE t1.stu_code=t2.stu_code and t2.in_or_out='归寝'"
+    sqlcount =u"SELECT  t1.id \
+                FROM home_application_students t1,home_application_stuflows t2 \
+                WHERE t1.stu_code=t2.stu_code and t2.in_or_out='归寝' "
+    try:
+        stu_code = req.POST.get("stu_code")
+        stu_name = req.POST.get("stu_name")
+        q_date_start = req.POST.get("q_date_start")
+        if q_date_start != None and q_date_start != "":
+            q_date_start=q_date_start.replace(u'&nbsp;', u' ')
+        #if q_date_start == None or q_date_start == "":
+        #    q_date_start = str(datetime.datetime.now())
+            #q_date_start=datetime.datetime.strptime(q_date_start,'%Y-%m-%d %H:%S:%M')
+        page_size = int(req.POST.get("limit"))
+        page_number = int(req.POST.get("page"))
+    except ValueError:
+        page_size=10
+        page_number=1
+    if page_number > 0:
+        startPos = (page_number-1) * page_size
+        endPos = startPos + page_size
+    if stu_code !=None and stu_code != "" :
+        sql += u" and t1.stu_code = '"+stu_code+u"'"
+        sqlcount += u" and t1.stu_code = '"+stu_code+u"'"
+    if stu_name !=None and stu_name != "" :
+        sql += u" and t1.stu_name = '"+stu_name+u"'"
+        sqlcount += u" and t1.stu_name = '"+stu_name+u"'"
     if q_date_start != None and q_date_start != "":
         sqldate = u"select * from (\
             select * from (\
@@ -712,7 +904,12 @@ def dictfetchall(cursor):
     
 def login_koala(session):
     #session = requests.session()
-    url = 'http://192.168.1.50/auth/login'
+    ip = get_dict_base_service()
+    if ip != None: 
+        url = ip+u'/auth/login'
+    else:
+        url=u'http://192.168.1.50/auth/login'
+    #url = 'http://192.168.1.50/auth/login'
     headers = {'User-Agent': 'Koala Admin'}
     data={"username":"test@megvii.com","password":"123456"}
     ret = session.post(url, json=data, headers=headers).content
@@ -724,7 +921,12 @@ def get_koala_user(req):
     session = requests.session()
     code = login_koala(session)
     if code == 0:
-        url = 'http://192.168.1.50/mobile-admin/subjects'
+        ip = get_dict_base_service()
+        if ip != None: 
+            url = ip+u'/mobile-admin/subjects'
+        else:
+            url=u'http://192.168.1.50/mobile-admin/subjects'
+        #url = 'http://192.168.1.50/mobile-admin/subjects'
         data = {}
         ret = None
         try:
@@ -738,7 +940,9 @@ def get_koala_user(req):
                     stu_build=d['department']
                     stu_room=d['company_id']
                     stu_img=d['photos'][0]['url']
-                    Students.objects.create(stu_code=stu_code,stu_name=stu_name,stu_class=stu_class,stu_build=stu_build,
+                    stu = Students.objects.get(stu_code=stu_code)
+                    if not stu:
+                        Students.objects.create(stu_code=stu_code,stu_name=stu_name,stu_class=stu_class,stu_build=stu_build,
                                 stu_room=stu_room,stu_img=stu_img)
             else:
                 print data['code'], data['desc']
@@ -784,7 +988,11 @@ def get_events(req):
             if code == 0:
                 try:
                     para={"start":times["pre"],"end":times["next"]}
-                    url = 'http://192.168.1.50/event/events'
+                    ip = get_dict_base_service()
+                    if ip != None: 
+                        url = ip+u'/event/events'
+                    else:
+                        url=u'http://192.168.1.50/event/events'
                     ret = session.get(url,json=para)
                     data = json.loads(ret.text)
                     if data['code'] != 0:
@@ -798,8 +1006,16 @@ def get_events(req):
                             dateArray = dateArray + datetime.timedelta(hours=8)
                             otherStyleTime = dateArray.strftime("%Y-%m-%d %H:%M:%S")
                             stu_img=record['photo']
-                            in_or_out='归寝'
+                            ips = ip_re_format(record['screen']['camera_address'])
+                            if ips :
+                                dict = get_dict_data_by_type_and_code("base_conf",ips[0])
                             if stu_code != None and stu_code != "":
+                                if dict['code']:
+                                    list = dict['list'][0]
+                                    if list['dict_value'] == 'IN':
+                                        in_or_out='归寝'
+                                    if list['dict_value'] == 'OUT':
+                                        in_or_out='离寝'
                                 stus = StuFlows.objects.filter(stu_img=stu_img)
                                 if not stus :
                                     StuFlows.objects.create(stu_code=stu_code,stu_flow_date=otherStyleTime,
@@ -808,7 +1024,12 @@ def get_events(req):
                             else:
                                 items = StuOut.objects.filter(stu_out_img=stu_img)
                                 if not items :
-                                    in_or_out='到访'
+                                    if dict['code']:
+                                        list = dict['list'][0]
+                                        if list['dict_value'] == 'IN':
+                                            in_or_out='到访'
+                                        if list['dict_value'] == 'OUT':
+                                            in_or_out='离开'
                                     StuOut.objects.create(type="非人工操作",stu_out_flow_date=otherStyleTime,
                                             in_or_out=in_or_out,stu_out_img=stu_img)
                 except:
@@ -836,6 +1057,43 @@ def exp_stu_in(req):
         sql += u" and t1.stu_build like '%%"+stu_build+u"%%'"
     if stu_class !=None and stu_class != "" :
         sql += u" and t1.stu_class like '%%"+stu_class+u"%%'"
+    if q_date_start != None and q_date_start != "":
+        sqldate = u"select * from (\
+            select * from (\
+                select t.id,t.stu_code,t.in_or_out,date_format(t.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,\
+                    ABS(TIME_TO_SEC(str_to_date('"+q_date_start+u"','%Y-%m-%d %H:%i:%s'))- TIME_TO_SEC(t.stu_flow_date))  AS diffTime\
+                FROM home_application_stuflows t,home_application_students s\
+                WHERE t.stu_code=s.stu_code\
+                order by stu_code,in_or_out,diffTime asc) a\
+            group by a.stu_code asc,in_or_out asc,diffTime asc\
+            ORDER BY a.stu_code asc,diffTime asc\
+            )b\
+            group by b.stu_code"
+        sql += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+    titles_name= jgCols.split("|")
+    titles_code = showNames.split("|")
+    titles = formatTitles(titles_name,titles_code)
+    cursor.execute(sql)
+    dicts =dictfetchall(cursor)
+    return export_excel(req,"在寝人员列表",titles,dicts)
+
+def exp_stu_flow_in(req):
+    from django.db import connection
+    cursor=connection.cursor()
+    sql = u"SELECT DISTINCT t1.id,t1.stu_code,t1.stu_name,t1.stu_build,t1.stu_class,t1.stu_room,t2.in_or_out,date_format(t2.stu_flow_date, '%Y-%m-%d %H:%m:%s') as stu_flow_date,t2.stu_img\
+            FROM home_application_students t1,home_application_stuflows t2\
+            WHERE t1.stu_code=t2.stu_code and t2.in_or_out='归寝'"
+    jgCols = req.GET.get("jgCols");
+    showNames = req.GET.get("showNames")
+    q_date_start = req.GET.get("q_date_start");
+    if q_date_start != None and q_date_start != "":
+            q_date_start=q_date_start.replace(u'&nbsp;', u' ')
+    stu_code = req.GET.get("stu_code");
+    stu_name = req.GET.get("stu_name");
+    if stu_code !=None and stu_code != "" :
+        sql += u" and t1.stu_code = '"+stu_code+u"'"
+    if stu_name !=None and stu_name != "" :
+        sql += u" and t1.stu_name = '"+stu_name+u"'"
     if q_date_start != None and q_date_start != "":
         sqldate = u"select * from (\
             select * from (\
@@ -885,6 +1143,44 @@ def exp_stu_out(req):
         sql += u" and t1.stu_build like '%%"+stu_build+u"%%'"
     if stu_class !=None and stu_class != "" :
         sql += u" and t1.stu_class like '%%"+stu_class+u"%%'"
+    if q_date_start != None and q_date_start != "":
+        sqldate = u"select * from (\
+            select * from (\
+                select t.id,t.stu_code,t.in_or_out,date_format(t.stu_flow_date, '%Y-%m-%d %H:%i:%s') as stu_flow_date,\
+                    ABS(TIME_TO_SEC(str_to_date('"+q_date_start+u"','%Y-%m-%d %H:%i:%s'))- TIME_TO_SEC(t.stu_flow_date))  AS diffTime\
+                FROM home_application_stuflows t,home_application_students s\
+                WHERE t.stu_code=s.stu_code\
+                order by stu_code,in_or_out,diffTime asc) a\
+            group by a.stu_code asc,in_or_out asc,diffTime asc\
+            ORDER BY a.stu_code asc,diffTime asc\
+            )b\
+            group by b.stu_code"
+        sql += u" and t2.id in (SELECT tt.id from ("+sqldate+u") tt)"
+    titles_name= jgCols.split("|")
+    titles_code = showNames.split("|")
+    titles = formatTitles(titles_name,titles_code)
+    cursor.execute(sql)
+    dicts =dictfetchall(cursor)
+    return export_excel(req,"离寝人员列表",titles,dicts)
+
+
+def exp_stu_flow_out(req):
+    from django.db import connection
+    cursor=connection.cursor()
+    sql = u"SELECT DISTINCT t1.id,t1.stu_code,t1.stu_name,t1.stu_build,t1.stu_class,t1.stu_room,t2.in_or_out,date_format(t2.stu_flow_date, '%Y-%m-%d %H:%m:%s') as stu_flow_date,t2.stu_img\
+            FROM home_application_students t1,home_application_stuflows t2\
+            WHERE t1.stu_code=t2.stu_code and t2.in_or_out='离寝'"
+    jgCols = req.GET.get("jgCols");
+    showNames = req.GET.get("showNames")
+    q_date_start = req.GET.get("q_date_start");
+    if q_date_start != None and q_date_start != "":
+            q_date_start=q_date_start.replace(u'&nbsp;', u' ')
+    stu_code = req.GET.get("stu_code");
+    stu_name = req.GET.get("stu_name");
+    if stu_code !=None and stu_code != "" :
+        sql += u" and t1.stu_code ='"+stu_code+u"'"
+    if stu_name !=None and stu_name != "" :
+        sql += u" and t1.stu_name = '"+stu_name+u"'"
     if q_date_start != None and q_date_start != "":
         sqldate = u"select * from (\
             select * from (\
@@ -966,5 +1262,42 @@ def do_uninconfrim(req):
         return render_json({'code':True,'msg':u"操作成功"})
     except Exception,e:
         return render_json({'code':False,'msg':u"操作失败"})
-    
-    
+
+
+def get_dict_data_by_type_and_code(type,code):
+    dict_type=type
+    if type == None or type =="":
+        return render_json({'code':False, 'msg':"字典类型不能为空"})
+    if code == None or code =="":
+        return {'code':False, 'msg':"字典编码不能为空"}
+    try: 
+        dicts = Dicts.objects.filter(dict_type=dict_type,dict_name=code)             
+    except:
+        return {'code':False, 'msg':"查询数据出错"}
+    return {'code':True, 'msg':"查询数据成功",'list':convert_objs_to_dicts(dicts)}
+
+def get_dict_base_service():
+    dict_type="base_conf"
+    code = "base_service_conf"
+    if type == None or type =="":
+        return render_json({'code':False, 'msg':"字典类型不能为空"})
+    if code == None or code =="":
+        return {'code':False, 'msg':"字典编码不能为空"}
+    try: 
+        dicts = Dicts.objects.filter(dict_type=dict_type,dict_name=code)
+        if dicts :
+            item = dicts[0]             
+            if item :
+                return item.dict_value
+    except:
+        return None
+
+
+def ip_re_format(url):  
+    import re
+    compile_rule = re.compile(r'(?<![\.\d])(?:\d{1,3}\.){3}\d{1,3}(?![\.\d])')  
+    match_list = re.findall(compile_rule, url)  
+    if match_list:  
+        return match_list 
+    else:  
+        return None  
